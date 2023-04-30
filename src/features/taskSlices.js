@@ -117,8 +117,7 @@ export const deleteATask=createAsyncThunk('task/delete', async (data,thunkApi) =
   const {token} = user.data;
   
   try{
-  const response = await axios.delete(`https://task-app-backend-z8r0.onrender.com
- /api/v1/task/${id}`,{
+  const response = await axios.delete(`https://task-app-backend-z8r0.onrender.com/api/v1/task/${id}`,{
     headers:{
       "Authorization" : `Bearer ${token}`
     }
