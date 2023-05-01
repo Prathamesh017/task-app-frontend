@@ -3,7 +3,8 @@ import "./Task.css";
 import {useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutReducer} from '../features/authSlice';
-import { getAllTasks ,createATask ,deleteATask} from '../features/taskSlices';
+import { getAllTasks ,createATask ,deleteATask,  logoutTaskReducer} from '../features/taskSlices';
+import Loader from './Loader';
 function Task() {
     const navigate = useNavigate();
     const dispatch=useDispatch();
@@ -15,8 +16,7 @@ function Task() {
     })
     const [task,setTask]=useState("");
     
-    console.log(taskState)
-  console.log(taskState.data);
+  
   useEffect(()=>{
     dispatch(getAllTasks(taskState));
   },[])
@@ -26,6 +26,7 @@ function Task() {
  const logout=()=>{
   localStorage.clear();
     dispatch(logoutReducer(registerState));
+    dispatch(logoutTaskReducer(taskState))
     navigate("/");
  }
 
@@ -34,7 +35,9 @@ function Task() {
     taskNumber:taskState.data.Alltasks.length+1,
     taskName:task,
   }
+  
   await dispatch(createATask(taskObj)).unwrap().then((pt)=>{
+   console.log("pt",pt);
     dispatch(getAllTasks(taskState));
   }).catch((e)=>{
     console.log(e);
@@ -42,9 +45,9 @@ function Task() {
  }
 
  const deleteTask=(id)=>{
-  console.log(id);
+
   dispatch(deleteATask(id)).unwrap().then((pt)=>{
-    console.log(pt);
+   
     dispatch(getAllTasks(taskState));
   }).catch((e)=>{
     console.log(e);
@@ -67,7 +70,9 @@ function Task() {
         <h3 className='second-header'>Goals Dashboard</h3>
             <input type='text' placeholder='enter task' onChange={(event)=>{setTask(event.target.value)}}></input>  
             <button className='submit-button' onClick={()=>{submitTask()}}>Submit</button>
-         
+            {
+          taskState.status==="loading"&& <Loader></Loader>
+        }
          </div>
      
      
