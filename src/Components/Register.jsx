@@ -2,7 +2,7 @@ import React, { useEffect, useState} from 'react'
 import "./Register.css";
 import {BsFillPersonFill} from "react-icons/bs";
 import { checkisEmpty,validateEmail ,removeErrors} from '../helpers/helper';
-import { registerUser, } from '../features/authSlice';
+import { registerUser,removeError } from '../features/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate} from "react-router-dom"
 import Loader from './Loader';
@@ -38,7 +38,6 @@ useEffect(()=>{
 },[registerData,navigate])
 useEffect(()=>{
   if((errorMessage.name===null&& errorMessage.email===null&&errorMessage.password===null&&errorMessage.cpassword===null)){
-    // const {name,email,password}=intialData;
     dispatch(registerUser(intialData));
   }
 },[errorMessage,dispatch,intialData])
@@ -47,7 +46,7 @@ const submitData=()=>{
    checkisEmpty(key,intialData[key],showErrorMessage);
 }
 if(intialData.email.length>=3){
-  // validateEmail(intialData.email,showErrorMessage);
+  validateEmail(intialData.email,showErrorMessage);
 }
 if(intialData.cpassword.length>0 && intialData.password.length>0){
   showErrorMessage((errorMessage)=>({...errorMessage,cpassword:intialData.cpassword!==intialData.password?"passwords don't match":null}));
@@ -65,6 +64,7 @@ if(intialData.cpassword.length>0 && intialData.password.length>0){
             <input type='text' placeholder='enter name' onChange={(event)=>{
                 removeErrors("name",showErrorMessage);
               setIntialData((intialData=>({...intialData,name:event.target.value})))
+              dispatch(removeError(registerData));
             }}></input>
             <p>{errorMessage.name}</p>
              </div>
@@ -72,19 +72,23 @@ if(intialData.cpassword.length>0 && intialData.password.length>0){
             <input type='email' placeholder='enter email' onChange={(event)=>{
                 removeErrors("email",showErrorMessage);
               setIntialData((intialData=>({...intialData,email:event.target.value})))
+              dispatch(removeError(registerData));
             }}></input>
               <p>{errorMessage.email}</p>
              </div>
             <div className='input-div'>
             <input type='password' placeholder='enter password' onChange={(event)=>{
                 removeErrors("password",showErrorMessage);
+
               setIntialData((intialData=>({...intialData,password:event.target.value})))
+              dispatch(removeError(registerData));
             }}></input>
               <p>{errorMessage.password}</p>
              </div>
              <div className='input-div'>
             <input type='password' placeholder='confirm password' onChange={(event)=>{
-                removeErrors("cpassword",showErrorMessage);
+              removeErrors("cpassword",showErrorMessage);
+              dispatch(removeError(registerData));
               setIntialData((intialData=>({...intialData,cpassword:event.target.value})))
             }}></input>
               <p>{errorMessage.cpassword}</p>
