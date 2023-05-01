@@ -4,7 +4,7 @@ import {MdLogin} from "react-icons/md";
 import { checkisEmpty,validateEmail ,removeErrors} from '../helpers/helper';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch,useSelector} from 'react-redux';
-import { loginUser,hasAuthenticated,removeError } from '../features/authSlice';
+import { loginUser,removeError } from '../features/authSlice';
 import Loader from './Loader';
 
 function Login() {
@@ -29,7 +29,7 @@ function Login() {
    },[loginData,navigate])
    useEffect(()=>{
      if((clearError &&errorMessage.email===null&&errorMessage.password===null)){
-       // const {name,email,password}=intialData;
+  
        dispatch(loginUser(intialData));
      }
    },[errorMessage,dispatch,intialData,clearError])
