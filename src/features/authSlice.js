@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+const backendUrl=`https://task-app-backend-z8r0.onrender.com/api/v1/user`;
+
 const initialState = {
   data: {
     name: '',
@@ -72,11 +74,13 @@ export const registerUser = createAsyncThunk('user/register', async (data,{rejec
   try{
 
   const { name, email, password } = data
-  const response = await axios.post('https://task-app-backend-z8r0.onrender.com/api/v1/user/register', {
+  const response = await axios.post(`${backendUrl}/register`, {
     name,
     email,
     password,
   })
+  console.log("response.data",response.data)
+  localStorage.setItem('user', JSON.stringify(response.data))
   return response.data
 }
 catch(error){
@@ -89,7 +93,7 @@ export const loginUser = createAsyncThunk(
     const { email, password } = data
   
     try {
-      const response = await axios.post('https://task-app-backend-z8r0.onrender.com/api/v1/user/login', {
+      const response = await axios.post(`${backendUrl}/login`, {
         email,
         password,
       })
