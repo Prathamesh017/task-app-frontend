@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk} from '@reduxjs/toolkit'
 import axios from 'axios'
 
+const backendUrl=`https://task-app-backend-z8r0.onrender.com/api/v1/task`
 const initialState = {
   data: {
     Alltasks:[],
@@ -15,7 +16,13 @@ export const taskSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    
+    logoutTaskReducer: (state) => ({
+      ...state,
+      status: 'idle',
+      data: {
+        Alltasks:[],
+      },
+    }),
     
   },
   extraReducers(builder) {
@@ -75,7 +82,7 @@ export const getAllTasks = createAsyncThunk('task/get', async (data,thunkApi) =>
 
   try {
     
-  const response = await axios.get(`https://task-app-backend-z8r0.onrender.com/api/v1/task/${id}`,{
+  const response = await axios.get(`${backendUrl}/${id}`,{
     headers:{
       "Authorization" : `Bearer ${token}`
     }
@@ -93,9 +100,10 @@ export const createATask= createAsyncThunk('task/post', async (data,thunkApi) =>
   const {taskName,taskNumber}=data;
   const user=JSON.parse(localStorage.getItem("user"));
   const { _id:userId,token} = user.data;
+  console.log(taskName,taskNumber,token)
   try{
 
-  const response = await axios.post('https://task-app-backend-z8r0.onrender.com/api/v1/task',{userId,taskName,taskNumber},{
+  const response = await axios.post(`${backendUrl}`,{userId,taskName,taskNumber},{
      headers:{
        "Authorization" : `Bearer ${token}`
      }
@@ -117,7 +125,7 @@ export const deleteATask=createAsyncThunk('task/delete', async (data,thunkApi) =
   const {token} = user.data;
   
   try{
-  const response = await axios.delete(`https://task-app-backend-z8r0.onrender.com/api/v1/task/${id}`,{
+  const response = await axios.delete(`${backendUrl}/${id}`,{
     headers:{
       "Authorization" : `Bearer ${token}`
     }
@@ -134,6 +142,6 @@ catch (error) {
 }
 })
 
-// export const {} = taskSlice.actions
+export const {logoutTaskReducer} = taskSlice.actions
 
 export default taskSlice.reducer
